@@ -6,7 +6,18 @@ import datetime
 from facturacion import SistemaFacturacion, Articulo, Factura
 
 class FacturacionUI:
+    """
+    Clase que representa la interfaz gráfica de usuario para un sistema
+    de facturación tipo POS utilizando Tkinter.
+    """
+
     def __init__(self, root):
+        """
+        Inicializa la aplicación, configurando la ventana principal y
+        construyendo todos los componentes de la interfaz.
+
+        :param root: Ventana raíz de Tkinter.
+        """
         self.root = root
         self.root.title("Sistema de Facturación POS")
         self.root.geometry("700x600")
@@ -16,11 +27,14 @@ class FacturacionUI:
 
         self._construir_interfaz()
 
-        # Activar tema automático al iniciar si se selecciona
         if self.tema.get() == "Automático":
             self.cambiar_tema()
 
     def _construir_interfaz(self):
+        """
+        Construye la interfaz completa dividiéndola en bloques:
+        encabezado, línea de artículos, factura y controles finales.
+        """
         estilo = ttk.Style()
         estilo.configure("TFrame", background="#f0f0f0")
         estilo.configure("TLabel", background="#f0f0f0", font=("Segoe UI", 10))
@@ -35,6 +49,9 @@ class FacturacionUI:
         self._crear_controles_finales()
 
     def _crear_encabezado(self):
+        """
+        Crea el bloque de entrada de datos del cliente y la fecha.
+        """
         frame_encabezado = ttk.LabelFrame(self.frame, text="Datos del Cliente")
         frame_encabezado.pack(fill=tk.X, pady=5)
 
@@ -47,6 +64,9 @@ class FacturacionUI:
         self.fecha_entry.grid(row=0, column=3, padx=5)
 
     def _crear_linea_articulos(self):
+        """
+        Crea el formulario para ingresar artículos a la factura.
+        """
         frame_articulo = ttk.LabelFrame(self.frame, text="Agregar Producto")
         frame_articulo.pack(fill=tk.X, pady=5)
 
@@ -66,6 +86,9 @@ class FacturacionUI:
         self.btn_agregar.grid(row=0, column=6, padx=5)
 
     def _crear_factura(self):
+        """
+        Muestra la lista de artículos añadidos y el total actual.
+        """
         frame_factura = ttk.LabelFrame(self.frame, text="Factura Actual")
         frame_factura.pack(fill=tk.BOTH, expand=True, pady=5)
 
@@ -77,6 +100,9 @@ class FacturacionUI:
         self.lbl_total.pack(pady=5)
 
     def _crear_controles_finales(self):
+        """
+        Crea botones de guardado, limpieza y selector de tema.
+        """
         frame_controles = ttk.Frame(self.frame)
         frame_controles.pack(fill=tk.X, pady=10)
 
@@ -93,6 +119,10 @@ class FacturacionUI:
         self.tema.set("Claro")
 
     def agregar_producto(self):
+        """
+        Agrega un producto a la factura actual, validando los datos de entrada.
+        Muestra un mensaje de error si hay valores inválidos.
+        """
         try:
             nombre = self.producto_entry.get()
             precio = float(self.precio_entry.get())
@@ -112,6 +142,9 @@ class FacturacionUI:
             messagebox.showerror("Error", "⚠️ Ingresa datos válidos para el producto.")
 
     def guardar_factura(self):
+        """
+        Guarda la factura actual en el sistema y muestra mensaje de confirmación.
+        """
         if self.factura_actual:
             self.sistema.facturas.append(self.factura_actual)
             self.sistema.total_general += self.factura_actual.total
@@ -119,6 +152,9 @@ class FacturacionUI:
             self.limpiar_formulario()
 
     def limpiar_formulario(self):
+        """
+        Limpia todos los campos del formulario y resetea la factura actual.
+        """
         self.cliente_entry.delete(0, tk.END)
         self.fecha_entry.delete(0, tk.END)
         self.producto_entry.delete(0, tk.END)
@@ -129,9 +165,14 @@ class FacturacionUI:
         self.factura_actual = None
 
     def cambiar_tema(self, evento=None):
+        """
+        Cambia el tema de colores de la interfaz según la selección del usuario.
+        Si el tema es 'Automático', se ajusta según la hora actual.
+        
+        :param evento: Evento del selector de tema (opcional).
+        """
         seleccion = self.tema.get()
 
-        # Si el modo es Automático, decide según la hora
         if seleccion == "Automático":
             hora_actual = datetime.datetime.now().hour
             if 6 <= hora_actual < 18:
@@ -176,3 +217,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = FacturacionUI(root)
     root.mainloop()
+
