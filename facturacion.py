@@ -1,3 +1,5 @@
+import datetime
+
 class Articulo:
     def __init__(self, nombre, precio_unitario, cantidad):
         self.nombre = nombre
@@ -10,9 +12,9 @@ class Articulo:
 
 
 class Factura:
-    def __init__(self, cliente, fecha):
+    def __init__(self, cliente, fecha=None):
         self.cliente = cliente
-        self.fecha = fecha
+        self.fecha = fecha if fecha is not None else datetime.datetime.now().strftime("%d/%m/%Y")
         self.articulos = []
         self.total = 0.0
 
