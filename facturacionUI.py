@@ -11,24 +11,24 @@ class FacturacionApp:
         self.factura = None
 
         # Widgets de cliente
-        tk.Label(root, text="Nombre del Cliente:").grid(row=0, column=0)
+        tk.Label(root, text="Nombre del Cliente:").grid(row=0, column=0, padx=5, pady=5)
         self.entry_cliente = tk.Entry(root)
-        self.entry_cliente.grid(row=0, column=1)
+        self.entry_cliente.grid(row=0, column=1, padx=5, pady=5)
 
         # Artículo - nombre, precio, cantidad
-        tk.Label(root, text="Producto:").grid(row=1, column=0)
+        tk.Label(root, text="Producto:").grid(row=1, column=0, padx=5, pady=5)
         self.entry_producto = tk.Entry(root)
-        self.entry_producto.grid(row=1, column=1)
+        self.entry_producto.grid(row=1, column=1, padx=5, pady=5)
 
-        tk.Label(root, text="Precio:").grid(row=2, column=0)
+        tk.Label(root, text="Precio:").grid(row=2, column=0, padx=5, pady=5)
         self.entry_precio = tk.Entry(root)
-        self.entry_precio.grid(row=2, column=1)
+        self.entry_precio.grid(row=2, column=1, padx=5, pady=5)
 
-        tk.Label(root, text="Cantidad:").grid(row=3, column=0)
+        tk.Label(root, text="Cantidad:").grid(row=3, column=0, padx=5, pady=5)
         self.entry_cantidad = tk.Entry(root)
-        self.entry_cantidad.grid(row=3, column=1)
+        self.entry_cantidad.grid(row=3, column=1, padx=5, pady=5)
 
-        # Botón agregar artículo
+        # Botón para agregar artículo
         self.boton_agregar = tk.Button(root, text="Agregar artículo", command=self.agregar_articulo)
         self.boton_agregar.grid(row=4, column=0, columnspan=2, pady=5)
 
@@ -36,7 +36,7 @@ class FacturacionApp:
         self.text_factura = tk.Text(root, width=60, height=15)
         self.text_factura.grid(row=5, column=0, columnspan=2, pady=10)
 
-        # Botón mostrar factura final
+        # Botón para mostrar factura final
         self.boton_mostrar = tk.Button(root, text="Mostrar Factura", command=self.mostrar_factura)
         self.boton_mostrar.grid(row=6, column=0, columnspan=2, pady=5)
 
@@ -49,6 +49,7 @@ class FacturacionApp:
             messagebox.showerror("Error", "Precio y cantidad deben ser numéricos")
             return
 
+        # Inicializa la factura si aún no se ha creado, usando el nombre del cliente
         if not self.factura:
             cliente = self.entry_cliente.get()
             if not cliente:
@@ -70,7 +71,7 @@ class FacturacionApp:
             return
 
         self.text_factura.insert(tk.END, "\n--- FACTURA FINAL ---\n")
-        self.text_factura.insert(tk.END, f"Cliente: {self.factura.nombre_cliente}\n")
+        self.text_factura.insert(tk.END, f"Cliente: {self.factura.cliente}\n")
         self.text_factura.insert(tk.END, f"Fecha: {self.factura.fecha}\n")
         self.text_factura.insert(tk.END, f"Total: ${self.factura.total:.2f}\n")
 
