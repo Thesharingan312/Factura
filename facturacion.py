@@ -1,36 +1,33 @@
-import datetime
-
 class Articulo:
-    def __init__(self, nombre, precio_unitario, cantidad):
+    def __init__(self, nombre, precio, cantidad):
         self.nombre = nombre
-        self.precio_unitario = precio_unitario
+        self.precio = precio
         self.cantidad = cantidad
-        self.subtotal = self.precio_unitario * self.cantidad
 
     def __str__(self):
-        return f"{self.nombre} x {self.cantidad} @ ${self.precio_unitario:.2f} = ${self.subtotal:.2f}"
+        total = self.precio * self.cantidad
+        return f"{self.nombre} - {self.cantidad} x ${self.precio:.2f} = ${total:.2f}"
 
 
 class Factura:
-    def __init__(self, cliente, fecha=None):
+    def __init__(self, cliente, fecha):
         self.cliente = cliente
-        self.fecha = fecha if fecha is not None else datetime.datetime.now().strftime("%d/%m/%Y")
+        self.fecha = fecha
         self.articulos = []
         self.total = 0.0
 
     def agregar_articulo(self, articulo):
         self.articulos.append(articulo)
-        self.total += articulo.subtotal
+        self.total += articulo.precio * articulo.cantidad
 
-    def mostrar_factura(self):
-        print("\n----- FACTURA -----")
-        print(f"Cliente: {self.cliente}")
-        print(f"Fecha: {self.fecha}")
-        print("Productos:")
-        for item in self.articulos:
-            print(f"  - {item}")
-        print(f"Total: ${self.total:.2f}")
-        print("-------------------\n")
+    def limpiar_factura(self):
+        self.articulos.clear()
+        self.total = 0.0
+
+    def __str__(self):
+        cabecera = f"Factura para {self.cliente} - Fecha: {self.fecha}\n"
+        detalle = "\n".join(str(a) for a in self.articulos)
+        return f"{cabecera}\n{detalle}\n\nTOTAL: ${self.total:.2f}"
 
 
 class SistemaFacturacion:
@@ -38,45 +35,14 @@ class SistemaFacturacion:
         self.facturas = []
         self.total_general = 0.0
 
-    def crear_factura(self):
-        cliente = input("Nombre del cliente: ")
-        fecha = input("Fecha (dd/mm/aaaa): ")
+    def generar_factura(self, cliente, fecha, lista_articulos):
         factura = Factura(cliente, fecha)
-
-        while True:
-            producto = input("Nombre del producto (o escribe 'fin' para terminar): ")
-            if producto.lower() == 'fin':
-                break
-            try:
-                precio = float(input(f"Precio de '{producto}': $"))
-                cantidad = int(input(f"Cantidad de '{producto}': "))
-                articulo = Articulo(producto, precio, cantidad)
-                factura.agregar_articulo(articulo)
-            except ValueError:
-                print("⚠️ Error: ingresa valores válidos para precio y cantidad.")
-
-        factura.mostrar_factura()
+        for art in lista_articulos:
+            factura.agregar_articulo(art)
         self.facturas.append(factura)
         self.total_general += factura.total
+        return factura
 
-    def mostrar_resumen(self):
-        print("\n======= RESUMEN DE FACTURAS =======")
-        for f in self.facturas:
-            print(f"{f.fecha} - {f.cliente} - Total: ${f.total:.2f}")
-        print(f"TOTAL GENERAL FACTURADO: ${self.total_general:.2f}")
-        print("===================================")
-
-    def ejecutar(self):
-        print("======= BIENVENIDO AL SISTEMA DE FACTURACIÓN =======")
-        while True:
-            self.crear_factura()
-            otra = input("¿Deseas crear otra factura? (s/n): ")
-            if otra.lower() != 's':
-                break
-        self.mostrar_resumen()
-
-
-# Punto de entrada del programa
-if __name__ == "__main__":
-    sistema = SistemaFacturacion()
-    sistema.ejecutar()
+    def limpiar_facturas(self):
+        self.facturas.clear()
+        self.total_general = 0.0
